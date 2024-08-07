@@ -1,20 +1,28 @@
-//
-//  ViewController.swift
-//  NFCProject
-//
-//  Created by Hayato Kobayashi on 2024/08/07.
-//
-
 import UIKit
 import CoreNFC
+import AVFoundation
 
 class ViewController: UIViewController, NFCNDEFReaderSessionDelegate {
 
     var nfcSession: NFCNDEFReaderSession?
+    var audioPlayer: AVAudioPlayer?
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // ボタンを追加するなど、UIのセットアップを行います
+
+        // "audio"を含むWAVファイルのパスを設定します
+        guard let path = Bundle.main.path(forResource: "audio", ofType:"wav") else {
+            print("Audio file not found")
+            return
+        }
+
+        let url = URL(fileURLWithPath: path)
+
+        do {
+            audioPlayer = try AVAudioPlayer(contentsOf: url)
+        } catch {
+            print("Could not load file")
+        }
     }
 
     @IBAction func startWriting(_ sender: Any) {
@@ -60,11 +68,12 @@ class ViewController: UIViewController, NFCNDEFReaderSessionDelegate {
             }
 
             self.writeURL(to: tag, session: session)
+            self.audioPlayer?.play()  // WAVファイルを再生
         }
     }
 
     func writeURL(to tag: NFCNDEFTag, session: NFCNDEFReaderSession) {
-        let urlString = "https://example.com/audio.mp3"
+        let urlString = "https://example.com/audio.mp3"  // この部分は適宜変更してください
         guard let urlPayload = NFCNDEFPayload.wellKnownTypeURIPayload(url: URL(string: urlString)!) else { return }
         let ndefMessage = NFCNDEFMessage(records: [urlPayload])
 
@@ -86,3 +95,4 @@ class ViewController: UIViewController, NFCNDEFReaderSessionDelegate {
         }
     }
 }
+
