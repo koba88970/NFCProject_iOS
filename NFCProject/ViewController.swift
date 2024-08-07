@@ -73,7 +73,7 @@ class ViewController: UIViewController, NFCNDEFReaderSessionDelegate {
     }
 
     func writeURL(to tag: NFCNDEFTag, session: NFCNDEFReaderSession) {
-        let urlString = "https://example.com/audio.mp3"  // この部分は適宜変更してください
+        let urlString = "https://d.kuku.lu/dcjhhwsnp"  // この部分は適宜変更してください
         guard let urlPayload = NFCNDEFPayload.wellKnownTypeURIPayload(url: URL(string: urlString)!) else { return }
         let ndefMessage = NFCNDEFMessage(records: [urlPayload])
 
